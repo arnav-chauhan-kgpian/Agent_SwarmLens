@@ -1,13 +1,13 @@
 # LangGraph Self-Correcting RAG Agent
 ### As part of SwarmLens Generative AI Engineer Internship – Test Submission
 
-**Created by: Arnav Chauhan** **3rd Year UG** **Indian Institute of Technology, Kharagpur**
+**Created by: Arnav Chauhan,** **3rd Year UG,** **Indian Institute of Technology Kharagpur**
 
 ---
 
 This project implements an advanced Q&A AI agent using LangGraph. The agent answers technical questions from a knowledge base of seminal AI research papers and includes a full suite of bonus features: a Streamlit UI, LangSmith tracing, and RAGAs evaluation.
 
-## ⚙️ Setup
+## Setup
 
 1.  **Clone the Repository:**
     First, clone this repository to your local machine. This repository includes the `knowledge_base` directory with the required PDF files.
@@ -46,7 +46,7 @@ This project implements an advanced Q&A AI agent using LangGraph. The agent answ
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 You can run the project in three different modes:
 
