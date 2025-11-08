@@ -1,8 +1,31 @@
-💡 Agent Design & Approach (Report)
+# Agent Design & Approach (Report)
 
-This agent is designed as a cyclical, self-correcting graph rather than a simple linear pipeline. This innovative approach enhances answer quality by allowing the agent to learn from its own mistakes in real-time. The workflow is defined by the four required nodes: `plan`, `retrieve`, `answer`, and `reflect`. The `plan` node first acts as a query-rewriter to optimize the user's question for vector search. The `retrieve` node fetches context from a **ChromaDB vector store**, which is populated using **Hugging Face embeddings**. The `answer` node then uses the **Google Gemini LLM** to generate a response based *only* on this context.
+This agent is implemented as a cyclical, self-correcting graph rather than a linear pipeline. That design improves answer quality by letting the agent learn from its own mistakes in real time.
 
-The main innovation lies in the `reflect` node and the graph's conditional logic. This node acts as an "LLM-as-a-Judge," using the **Gemini model** again to critically evaluate the generated answer for relevance and faithfulness. If the answer is judged "Good," the process ends. However, if it's judged "Revise," the graph routes back to the `plan` node. This time, the `plan` node receives both the original question and the critique from the reflection. This "Plan-Do-Check-Act" cycle allows the agent to formulate a new, more informed query, retry the retrieval, and generate a superior answer. The main challenge was prompting the `reflect` node to be a strict but fair judge, ensuring it could differentiate a mediocre answer from a good one, which is key to triggering the self-correction loop effectively.
+## Architecture overview
 
+* **Workflow nodes:** `plan` → `retrieve` → `answer` → `reflect` (these four nodes are required).
+* **Purpose of each node:**
 
-Gemini can make mistakes, so double-check it
+  * `plan` — rewrites and optimizes the user query for vector search.
+  * `retrieve` — fetches context from a **ChromaDB** vector store populated using **Hugging Face embeddings**.
+  * `answer` — generates a response using the **Google Gemini LLM**, constrained to use only the retrieved context.
+  * `reflect` — evaluates the generated answer (acting as an “LLM-as-a-Judge”) to assess relevance and faithfulness.
+
+## Key innovation: the reflect loop
+
+* The `reflect` node uses the Gemini model to critique the answer.
+* If the reflection result is **Good**, the process terminates and the answer is returned.
+* If the reflection result is **Revise**, the graph routes back to `plan`. In that second pass the `plan` node receives:
+
+  * the original user question, and
+  * the critique produced by `reflect`.
+* This creates a **Plan → Do → Check → Act** cycle: the agent rewrites the query, retries retrieval with improved context, and produces a revised answer. This loop enables iterative self-correction and typically yields higher-quality responses.
+
+## Implementation notes & challenges
+
+* The core challenge was designing prompts for the `reflect` node so that it behaves as a strict but fair judge — i.e., it must reliably distinguish between mediocre and acceptable answers to trigger revisions only when appropriate.
+* Constraining the `answer` node to rely solely on retrieved context (and not hallucinate from the LLM prior) is crucial for faithfulness and traceability.
+* The ChromaDB + Hugging Face embeddings pipeline is used to ensure high-quality vector search results feeding the `retrieve` node.
+
+---
