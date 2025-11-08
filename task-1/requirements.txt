@@ -1,0 +1,15 @@
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-google-genai
+langgraph
+pydantic
+typing-extensions
+chromadb
+pypdf
+python-dotenv
+streamlit
+ragas
+datasets
+sentence-transformers
+langchain-huggingface
